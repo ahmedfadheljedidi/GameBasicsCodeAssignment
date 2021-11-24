@@ -38,3 +38,26 @@ fun List<FootballMatchResult>.getTeamGroupPerformance(team: Team): TeamGroupPerf
         goalsAgainst = goalsAgainst
     )
 }
+
+fun FootballMatchResult.isParticipant(team: Team): Boolean {
+    return when (team) {
+        firstTeamPerformance.team -> true
+        secondTeamPerformance.team -> true
+        else -> false
+    }
+}
+
+fun List<FootballMatchResult>.getGoalsDiffBetween(team: Team, opponent: Team): Pair<Int, Int> {
+    val matchResult = find { footballMatchResult ->
+        footballMatchResult.isParticipant(team) &&
+                footballMatchResult.isParticipant(opponent)
+    }
+    return matchResult?.let {
+        if (it.firstTeamPerformance.team == team) {
+            return@let it.firstTeamPerformance.goalsScored to it.secondTeamPerformance.goalsScored
+        } else {
+            return@let it.secondTeamPerformance.goalsScored to it.firstTeamPerformance.goalsScored
+        }
+    } ?: 0 to 0
+}
+
