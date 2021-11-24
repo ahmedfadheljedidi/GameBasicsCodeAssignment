@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Ahmed Football Group Simulator</string>
+    <string name="team_attack_strength">Att: %d</string>
+    <string name="team_midfield_strength">Mid: %d</string>
+    <string name="team_defence_strength">Def: %d</string>
+    <string name="team_goalKeeper_strength">GK: %d</string>
+    <string name="play_matches_button">Play</string>
+    <string name="reset_matches_button">Reset scores</string>
+    <string name="team_points">Pts: %d</string>
+    <string name="team_goals_difference">GD: %d</string>
+    <string name="team_goals_for">GF: %d</string>
+    <string name="team_goals_against">GA: %d</string>
 </resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/TeamNameTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/teamPoints"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.3"
+        tools:text="Team 100" />
+
+    <TextView
+        android:id="@+id/teamPoints"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_xxs"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toRightOf="@+id/TeamNameTv"
+        app:layout_constraintRight_toLeftOf="@+id/teamGoalDifference"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Pts: 6" />
+
+    <TextView
+        android:id="@+id/teamGoalDifference"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_xxs"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toRightOf="@+id/teamPoints"
+        app:layout_constraintRight_toLeftOf="@+id/teamGoalsFor"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="GD: 3" />
+
+    <TextView
+        android:id="@+id/teamGoalsFor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_xxs"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toRightOf="@+id/teamGoalDifference"
+        app:layout_constraintRight_toLeftOf="@+id/teamGoalsAgainst"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="GF: 5" />
+
+    <TextView
+        android:id="@+id/teamGoalsAgainst"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_xxs"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toRightOf="@+id/teamGoalsFor"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="GA: 2" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

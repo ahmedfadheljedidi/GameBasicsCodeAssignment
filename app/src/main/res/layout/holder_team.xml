@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/TeamNameTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/teamAtt"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.3"
+        tools:text="Team 100" />
+
+    <TextView
+        android:id="@+id/teamAtt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_xxs"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toRightOf="@+id/TeamNameTv"
+        app:layout_constraintRight_toLeftOf="@+id/teamMid"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Att: 100" />
+
+    <TextView
+        android:id="@+id/teamMid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_xxs"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toRightOf="@+id/teamAtt"
+        app:layout_constraintRight_toLeftOf="@+id/teamDef"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Mid: 100" />
+
+    <TextView
+        android:id="@+id/teamDef"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_xxs"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toRightOf="@+id/teamMid"
+        app:layout_constraintRight_toLeftOf="@+id/teamGK"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Def: 100" />
+
+    <TextView
+        android:id="@+id/teamGK"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_xxs"
+        android:textSize="@dimen/textSize_m"
+        app:layout_constraintLeft_toRightOf="@+id/teamDef"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="GK: 100" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
