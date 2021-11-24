@@ -1,7 +1,6 @@
 package com.gamebasics.ahmed.ahmedfootballgroupsimulator.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.gamebasics.ahmed.ahmedfootballgroupsimulator.testExtensions.CoroutinesTestExtension
 import com.gamebasics.ahmed.ahmedfootballgroupsimulator.testExtensions.MainCoroutineRule
 import com.gamebasics.ahmed.ahmedfootballgroupsimulator.viewStates.TeamsListViewState
 import com.gamebasics.ahmed.ahmedfootballgroupsimulator.viewStates.TeamsStandingViewState
@@ -19,10 +18,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
-@ExtendWith(CoroutinesTestExtension::class)
 
 internal class GroupSimulatorViewModelTest {
 
