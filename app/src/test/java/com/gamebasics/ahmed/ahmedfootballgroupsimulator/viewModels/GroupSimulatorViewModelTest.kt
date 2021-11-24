@@ -1,57 +1,110 @@
 package com.gamebasics.ahmed.ahmedfootballgroupsimulator.viewModels
 
-import com.gamebasics.ahmed.ahmedfootballgroupsimulator.TestExtensions.CoroutinesTestExtension
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.gamebasics.ahmed.ahmedfootballgroupsimulator.testExtensions.CoroutinesTestExtension
+import com.gamebasics.ahmed.ahmedfootballgroupsimulator.testExtensions.MainCoroutineRule
+import com.gamebasics.ahmed.ahmedfootballgroupsimulator.viewStates.TeamsListViewState
+import com.gamebasics.ahmed.ahmedfootballgroupsimulator.viewStates.TeamsStandingViewState
+import com.gamebasics.ahmed.domain.models.FootballMatch
+import com.gamebasics.ahmed.domain.models.FootballMatchResult
 import com.gamebasics.ahmed.domain.models.Team
+import com.gamebasics.ahmed.domain.models.TeamGroupPerformance
 import com.gamebasics.ahmed.domain.usecases.CalculateGroupStandingUseCase
 import com.gamebasics.ahmed.domain.usecases.GetTeamsUseCase
 import com.gamebasics.ahmed.domain.usecases.MatchPlanningUseCase
 import com.gamebasics.ahmed.domain.usecases.PlayMatchesUseCase
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.extension.RegisterExtension
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 @ExtendWith(CoroutinesTestExtension::class)
 
 internal class GroupSimulatorViewModelTest {
-    @JvmField
-    @RegisterExtension
-    val coroutinesTestExtension = CoroutinesTestExtension()
 
-    @Mock
-    private lateinit var getTeamsUseCase: GetTeamsUseCase
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @Mock
-    private lateinit var matchPlanningUseCase: MatchPlanningUseCase
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    val coroutineRule = MainCoroutineRule()
 
-    @Mock
-    private lateinit var playMatchesUseCase: PlayMatchesUseCase
+    private val getTeamsUseCase: GetTeamsUseCase = mockk()
+    private val matchPlanningUseCase: MatchPlanningUseCase = mockk()
+    private val playMatchesUseCase: PlayMatchesUseCase = mockk()
+    private val calculateGroupStandingUseCase: CalculateGroupStandingUseCase = mockk()
 
-    @Mock
-    private lateinit var calculateGroupStandingUseCase: CalculateGroupStandingUseCase
-
-    @InjectMocks
-    private lateinit var subject: GroupSimulatorViewModel
+    private val subject: GroupSimulatorViewModel by lazy {
+        GroupSimulatorViewModel(
+            getTeamsUseCase,
+            matchPlanningUseCase,
+            playMatchesUseCase,
+            calculateGroupStandingUseCase
+        )
+    }
 
     @Test
-    fun `When created, the list of teams is fetched`() = runBlockingTest {
+    fun `When created, the list of teams is fetched`() {
         val teamName = "Team 123"
-        val team = Team(teamName, 0, 0, 0, 0)
-        whenever(getTeamsUseCase.generateMatches()).thenReturn(listOf(team))
+        val teams = listOf(Team(teamName, 0, 0, 0, 0))
+        coEvery { getTeamsUseCase.generateMatches() } returns teams
 
-        subject.onCreate(mock())
-        val test = subject.teamsViewState.value
-        assertTrue(true)
+        subject.onCreate(mockk())
+
+        val testResult = subject.teamsViewState.value
+        testResult as TeamsListViewState.Loaded
+        assertEquals(teamName, testResult.teams[0].teamName)
+    }
+
+    @Test
+    fun `When play matches, the list team performances is returned`() {
+
+        val team1Name = "Team 123"
+        val team2Name = "Team 456"
+        val team1 = Team(team1Name, 0, 0, 0, 0)
+        val team2 = Team(team2Name, 0, 0, 0, 0)
+        val teams = listOf(team1, team2)
+        coEvery { getTeamsUseCase.generateMatches() } returns teams
+        subject.onCreate(mockk())
+
+        val footballMatches = listOf(FootballMatch(team1, team2))
+        coEvery { matchPlanningUseCase.planMatches(teams) } returns footballMatches
+
+        val firstTeamPerformance = FootballMatchResult.TeamPerformance(team1, 3)
+        val secondTeamPerformance = FootballMatchResult.TeamPerformance(team2, 2)
+        val footballMatchResults =
+            listOf(FootballMatchResult(firstTeamPerformance, secondTeamPerformance))
+        coEvery { playMatchesUseCase.playMatches(footballMatches) } returns footballMatchResults
+
+        val firstTeamGroupPerformance = TeamGroupPerformance(team1, 3, 1, 3, 2)
+        val secondTeamGroupPerformance = TeamGroupPerformance(team2, 0, -1, 2, 3)
+        coEvery {
+            calculateGroupStandingUseCase.calculateStandings(
+                teams,
+                footballMatchResults
+            )
+        } returns listOf(firstTeamGroupPerformance, secondTeamGroupPerformance)
+
+        subject.onCreate(mockk())
+        subject.playMatches()
+
+        val testResult = subject.teamsStandingViewState.value
+        testResult as TeamsStandingViewState.Loaded
+        assertEquals(team1Name, testResult.teamsStanding[0].teamName)
+        assertEquals(firstTeamGroupPerformance.points, testResult.teamsStanding[0].points)
+        assertEquals(firstTeamGroupPerformance.goalDifference, testResult.teamsStanding[0].goalDifference)
+        assertEquals(firstTeamGroupPerformance.goalsFor, testResult.teamsStanding[0].goalsFor)
+        assertEquals(firstTeamGroupPerformance.goalsAgainst, testResult.teamsStanding[0].goalsAgainst)
+
+        assertEquals(team2Name, testResult.teamsStanding[1].teamName)
+        assertEquals(secondTeamGroupPerformance.points, testResult.teamsStanding[1].points)
+        assertEquals(secondTeamGroupPerformance.goalDifference, testResult.teamsStanding[1].goalDifference)
+        assertEquals(secondTeamGroupPerformance.goalsFor, testResult.teamsStanding[1].goalsFor)
+        assertEquals(secondTeamGroupPerformance.goalsAgainst, testResult.teamsStanding[1].goalsAgainst)
     }
 
 
