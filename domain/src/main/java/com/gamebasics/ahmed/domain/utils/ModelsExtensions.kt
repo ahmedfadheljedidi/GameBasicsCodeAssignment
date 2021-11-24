@@ -4,7 +4,6 @@ import com.gamebasics.ahmed.domain.models.FootballMatchResult
 import com.gamebasics.ahmed.domain.models.Team
 import com.gamebasics.ahmed.domain.models.TeamGroupPerformance
 
-fun Team.getTotalStrength() = attack + midfield + defence + goalKeeper
 fun Team.getAttackingStrength() = attack + midfield
 fun Team.getDefendingStrength() = defence + goalKeeper
 

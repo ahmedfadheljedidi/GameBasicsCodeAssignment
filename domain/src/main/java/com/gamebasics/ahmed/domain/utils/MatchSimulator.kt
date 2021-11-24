@@ -28,8 +28,8 @@ class MatchSimulator @Inject constructor() {
     private fun calculateGoalsBasedOnStrength(power: Int): Int {
         return when {
             //If power difference is strictly positive then the attacking team scores a goal automatically,
-            // and for every additional 5 points of difference the attacking team scores another goal.
-            power > 0 -> 1 + power % 5
+            // and for every additional 30 points of difference the attacking team scores another goal.
+            power > 0 -> 1 + power / 30
             else -> 0
         }
     }
